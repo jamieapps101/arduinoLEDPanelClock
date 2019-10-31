@@ -9,6 +9,7 @@ class LEDPanel
   void disable();
   void writeBufferToPanel(byte *LEDBuffer,byte panel);
   void writeBuffer(byte *LEDBuffer);
+  void writeBufferToAll(byte *LEDBuffer);
   
   private:
   byte _dataPin;
