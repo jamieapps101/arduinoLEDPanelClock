@@ -1,4 +1,5 @@
 #include "LEDPanel.h"
+#include "digits2.h"
 
 LEDPanel::LEDPanel(byte dataPin, byte clockPin, byte CSPin, byte panels)
 {
@@ -86,19 +87,23 @@ void LEDPanel::writeBuffer(byte *LEDBuffer)  // should be a pointer referencing 
 {
   for (int i = 0; i < _panels; i++) // clear out registers before clocking data in
   {
-    SPI.transfer(0x00);
-    SPI.transfer(0x00);
+    SPI.transfer16(0x00);
   }
+  Serial.println("Data To write out");
   for (int row = 0; row < 8; row++)
   {
     digitalWrite(_CSPin, LOW);
     for (int panel = 0; panel < _panels; panel++)
     {
-      SPI.transfer(row + 1); // row address is row index + 1
-      SPI.transfer(LEDBuffer[(panel * 8) + row]);
+      int data = ((row + 1) << 8) | LEDBuffer[(panel * 8) + row];
+      Serial.print(LEDBuffer[(panel * 8) + row]);
+      Serial.print(" ");
+      SPI.transfer16(data);
     }
+    Serial.println(" ");
     digitalWrite(_CSPin, HIGH);
   }
+  Serial.println(" ");
 }
 
 void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referencing 1*_panels bytes
@@ -108,3 +113,43 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
     writeBufferToPanel(*LEDBuffer,panel);
   }
 }
+
+
+ void LEDPanel::writeString(String input, bool scroll)
+ {
+  // render the frame buffer
+    // for each letter, create a buffer of any length
+  byte panelBuffer[(_panels+2)*8]; // create an embty buffer with a little extra space than required
+  for(int i = 0; i < input.length(); i++)
+  {
+    char currentChar = input.charAt(i);
+    byte charVal = (byte)(currentChar - '0');
+    byte *renderedChar;
+    renderedChar = getVerticalLetter(charVal);
+    byte byteIndex = i*6; // ie the character we're on times 5 char wdith + 1 space
+    for(int a = 0; a < 5; a++)
+    {
+      panelBuffer[byteIndex+a] = renderedChar[a];
+    }
+  }
+
+  
+  
+  byte frameBuffer[_panels*8];
+  // transpose the frame buffer, aka going from ||||||||||| to horizontally stacked
+  for(int i =0; i<_panels; i++) // for now assume that we are not scrolling
+  {
+    for(int j=0; j<8;j++)
+    {
+      frameBuffer[i+0] = ((1<<0) & panelBuffer[i*8+j]) << j;
+      frameBuffer[i+1] = ((1<<1) & panelBuffer[i*8+j]) << j;
+      frameBuffer[i+2] = ((1<<2) & panelBuffer[i*8+j]) << j;
+      frameBuffer[i+3] = ((1<<3) & panelBuffer[i*8+j]) << j;
+      frameBuffer[i+4] = ((1<<4) & panelBuffer[i*8+j]) << j;
+      frameBuffer[i+5] = ((1<<5) & panelBuffer[i*8+j]) << j;
+      frameBuffer[i+6] = ((1<<6) & panelBuffer[i*8+j]) << j;
+      frameBuffer[i+7] = ((1<<7) & panelBuffer[i*8+j]) << j;
+    }
+  }
+  writeBuffer(frameBuffer);
+ }

@@ -10,6 +10,8 @@ class LEDPanel
   void writeBufferToPanel(byte *LEDBuffer,byte panel);
   void writeBuffer(byte *LEDBuffer);
   void writeBufferToAll(byte *LEDBuffer);
+
+  void writeString(String input, bool scroll);
   
   private:
   byte _dataPin;
@@ -17,4 +19,6 @@ class LEDPanel
   byte _CSPin; 
   byte _panels;
   void writeToAll(byte reg, byte data);
+  byte *_totalFrameBuffer;
+  byte *_frameBuffer;
 };
