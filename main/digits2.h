@@ -66,6 +66,62 @@ byte F[] = {
   B00000000
 };
 
+byte G[] = {
+  B01111100,
+  B10000010,
+  B10000010,
+  B10010010,
+  B01011100,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte H[] = {
+  B11111110,
+  B00010000,
+  B00010000,
+  B00010000,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte I[] = {
+  B00000000,
+  B10000010,
+  B11111110,
+  B10000010,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte L[] = {
+  B11111110,
+  B00000010,
+  B00000010,
+  B00000010,
+  B00000010,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte V[] = {
+  B11111000,
+  B00000100,
+  B00000010,
+  B00000100,
+  B11111000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+
 byte P[] = {
   B11111110,
   B10001000,
@@ -242,11 +298,26 @@ void *getVerticalLetter(char character)
     case 'F':
       return F;
     break;
-    case 'P':
-      return P;
+    case 'G':
+      return G;
+    break;
+    case 'H':
+      return H;
+    break;
+    case 'I':
+      return I;
+    break;
+    case 'L':
+      return L;
     break;
     case 'M':
       return M;
+    break;
+    case 'P':
+      return P;
+    break;
+    case 'V':
+      return V;
     break;
     case ':':
       return colon;
@@ -283,6 +354,9 @@ void *getVerticalLetter(char character)
     break;
     case '9':
       return nine;
+    break;
+    default:
+      return blank;
     break;
   }
 }

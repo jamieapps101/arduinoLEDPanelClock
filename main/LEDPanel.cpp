@@ -8,6 +8,7 @@ LEDPanel::LEDPanel(byte dataPin, byte clockPin, byte CSPin, byte panels)
   _clockPin = clockPin;
   _CSPin = CSPin;
   _panels = panels;
+  _scroll = false;
 
   // ignoring input pins rn to use hardware SPI
   // start the SPI library:
@@ -71,16 +72,9 @@ void LEDPanel::writeBufferToPanel(byte *LEDBuffer, byte panel) // should be a po
       SPI.transfer16(0x00);
     }
     int data = ((row + 1) << 8) | LEDBuffer[row];
-//    Serial.print("address: ");
-//    Serial.println(row+1);
-//    Serial.print("data: ");
-//    Serial.println(LEDBuffer[row]);
     SPI.transfer16(data);
-//    Serial.print("padding: ");
-//    Serial.println(panelDiff);
     for (byte i = 0; i < panelDiff; i++) // for other panels, simply fill with zeros
     {
-//      Serial.print("Adding padd, ");
       SPI.transfer16(0x00);
     }
     Serial.println("");
@@ -122,13 +116,30 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
  {
   // render the frame buffer
     // for each letter, create a buffer of any length
-  byte panelBuffer[(_panels+2)*8]; // create an embty buffer with a little extra space than required
+  byte *panelBuffer;
+  byte *panelBufferModified;
+  byte maxScrollWindowIndex_temp;
+  byte bufferPanelRowsEquiv = 0;
+  byte panelBufferRows = 0;
+  if(scroll == false)
+  {
+    byte rows = _panels*8;
+    panelBuffer = (byte*)calloc(rows,sizeof(byte));
+    bufferPanelRowsEquiv = rows;
+  }
+  else
+  {
+    // enough for all letters plus blank screen at end of scroll
+    byte rows = _panels*8 + (input.length()*5);
+    panelBuffer = (byte*)calloc(rows,sizeof(byte)); 
+    panelBufferModified = (byte*)calloc(rows,sizeof(byte));
+    maxScrollWindowIndex_temp = _panels*8 + ceil((input.length()*5)/8)*8;
+    bufferPanelRowsEquiv = _panels*8 + (input.length()*5);
+  }
+  
   for(int i = 0; i < input.length(); i++)
   {
     char currentChar = input.charAt(i);
-    //Serial.print("Current Char: ");
-    //Serial.println(currentChar);
-//    byte charVal = (byte)(currentChar - '0');
     byte charVal = (byte)currentChar;
     byte *renderedChar;
     renderedChar = getVerticalLetter(charVal);
@@ -136,40 +147,84 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
     for(int a = 0; a < 5; a++)
     {
       panelBuffer[byteIndex+a] = renderedChar[a];
-      //Serial.println(renderedChar[a]);
     }
-    //Serial.println(" ");
+    panelBuffer[byteIndex+5] = 0; 
   }
 
-  
-  
-  byte frameBuffer[_panels*8];
+//  byte frameBuffer[_panels*8];
   // transpose the frame buffer, aka going from ||||||||||| to horizontally stacked
-  Serial.println("Frame Buffers");
-  for(int panel =0; panel<_panels; panel++) // for now assume that we are not scrolling
+  if(scroll == true)
   {
-//    for(int j=0; j<8;j++)
-//    {
-//      frameBuffer[i+0] = ((1<<0) & panelBuffer[i*8+j]) << j;
-//      frameBuffer[i+1] = ((1<<1) & panelBuffer[i*8+j]) << j;
-//      frameBuffer[i+2] = ((1<<2) & panelBuffer[i*8+j]) << j;
-//      frameBuffer[i+3] = ((1<<3) & panelBuffer[i*8+j]) << j;
-//      frameBuffer[i+4] = ((1<<4) & panelBuffer[i*8+j]) << j;
-//      frameBuffer[i+5] = ((1<<5) & panelBuffer[i*8+j]) << j;
-//      frameBuffer[i+6] = ((1<<6) & panelBuffer[i*8+j]) << j;
-//      frameBuffer[i+7] = ((1<<7) & panelBuffer[i*8+j]) << j;
-//    }
-    for(int row = 0; row < 8; row++) // bc there are 8 rows
-    {
-      frameBuffer[panel*8+row] = 0;
-      for(int bitPos = 0; bitPos < 8; bitPos++)//bc there are 8 bits for a byte
-      {
-        frameBuffer[panel*8+row] |= panelBuffer[panel*8 + bitPos] >> bitPos;
-      }
-      //Serial.println(frameBuffer[panel*8+row]);
-    }
+    for(
   }
-  writeBuffer(frameBuffer);
+  
+  for(int panel =0; panel<(bufferPanelRowsEquiv/8); panel++) // for now assume that we are not scrolling
+  {
+    bufferRotate(panelBuffer+(panel*8));
+  }
+  writeBuffer(panelBuffer);
+  // deal with scroll settings if enabled:
+  if(scroll == true)
+  {
+    _scroll = true;
+    _scrollWindowIndex = 0;
+    _frameBuffer = panelBuffer;
+    _maxScrollWindowIndex = maxScrollWindowIndex_temp;
+  }
+  else
+  {
+    _scroll = false;
+    _scrollWindowIndex = 0;
+    _maxScrollWindowIndex = 0;
+    free(_frameBuffer);
+  }
  }
 
- 
+
+void LEDPanel::bufferRotate(byte *inputBuffer)
+{
+  bool temp[8][8];
+  for(int x = 0; x < 8; x++)
+  {
+    for(int y = 0; y < 8; y++)
+    {
+       temp[x][y] = inputBuffer[x] & (1<<y);
+    }
+  }
+  bool temp2[8][8];
+  for(int x = 0; x < 8; x++)
+  {
+    for(int y = 0; y < 8; y++)
+    {
+      // select line below as required
+       //temp2[x][y] = temp[7-x][7-y];
+       temp2[x][y] = temp[7-y][7-x];
+    }
+  }
+  for(int x = 0; x < 8; x++)
+  {
+    inputBuffer[x] = 0;
+    for(int y = 0; y < 8; y++)
+    {
+       inputBuffer[x] |= (temp2[x][y]) << y;
+    }
+  } 
+}
+
+
+void LEDPanel::scrollRender(int index)
+{
+  if(_scroll == true)
+  {
+    if(index > 0 && index < _maxScrollWindowIndex)
+    {
+       _scrollWindowIndex = index;
+    }
+    writeBuffer(_frameBuffer+_scrollWindowIndex);
+    _scrollWindowIndex++;
+    if(_scrollWindowIndex == _maxScrollWindowIndex)
+    {
+      _scrollWindowIndex = 0;
+    }
+  }
+}

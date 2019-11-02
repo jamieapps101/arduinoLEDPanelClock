@@ -109,89 +109,21 @@ void setup()
 {
   panel.disable();
   panel.setLEDIntensity(0);
-  Serial.begin(9600);
+  Serial.begin(115200);
   panel.enable();
-  //panel.writeBufferToPanel(J,0);
-  //panel.writeBufferToPanel(A,1);
-  //panel.writeString("ABCD",false);
-  //panel.writeBuffer(cBuffer);
-  panel.writeBufferToPanel(pBuffer,0);
-  rotate2(pBuffer);
-  panel.writeBufferToPanel(pBuffer,1);
-  rotate2(pBuffer);
-  panel.writeBufferToPanel(pBuffer,2);
-  rotate2(pBuffer);
-  panel.writeBufferToPanel(pBuffer,3);
-  rotate2(pBuffer);
-  
-  
-  
-}
-
-byte * rotate(byte *panelBuffer)
-{
-  byte frameBuffer[8];
-  for(int x = 0; x < 8; x++) // bc there are 8 rows
-  {
-    frameBuffer[x] = 0;
-    for(int y = 0; y < 8; y++)//bc there are 8 bits for a byte
-    {
-      frameBuffer[y] = panelBuffer[x];
-    }
-    Serial.println(frameBuffer[x]);
-  }
-  return frameBuffer;
-}
-
-void rotate2(byte *inputBuffer)
-{
-  bool temp[8][8];
-  Serial.println("Input");
-  for(int x = 0; x < 8; x++)
-  {
-    Serial.print(inputBuffer[x]);
-    Serial.print(" --> ");
-    for(int y = 0; y < 8; y++)
-    {
-       temp[x][y] = inputBuffer[x] & (1<<y);
-       Serial.print(inputBuffer[x],BIN);
-       Serial.print(",");
-       Serial.print((1<<y),BIN);
-       Serial.print("=");
-       Serial.print(temp[x][y]);
-       Serial.print("  ");
-    }
-    Serial.println();
-  }
-  bool temp2[8][8];
-  Serial.println("Output");
-  for(int x = 0; x < 8; x++)
-  {
-    for(int y = 0; y < 8; y++)
-    {
-       temp2[x][y] = temp[y][7-x];
-       Serial.print(temp2[x][y]);
-       Serial.print(" ");
-    }
-    Serial.println("");
-  }
-  Serial.println("Output Buffer");
-  for(int x = 0; x < 8; x++)
-  {
-    inputBuffer[x] = 0;
-    for(int y = 0; y < 8; y++)
-    {
-       inputBuffer[x] |= (temp2[x][y]) << y;
-       Serial.print(temp2[x][y]);
-       Serial.print("  ");
-    }
-    Serial.println("");
-  }
-  
+//  panel.writeBufferToPanel(pBuffer,0);
+//  panel.bufferRotate(pBuffer);
+//  panel.writeBufferToPanel(pBuffer,1);
+//  panel.bufferRotate(pBuffer);
+//  panel.writeBufferToPanel(pBuffer,2);
+//  panel.bufferRotate(pBuffer);
+//  panel.writeBufferToPanel(pBuffer,3);
+//  panel.bufferRotate(pBuffer); 
+  panel.writeString("ABCDEFG",true);
 }
 
 void loop() 
 {
-  
-
+  panel.scrollRender(-1);
+  delay(500);
 }
