@@ -71,16 +71,16 @@ void LEDPanel::writeBufferToPanel(byte *LEDBuffer, byte panel) // should be a po
       SPI.transfer16(0x00);
     }
     int data = ((row + 1) << 8) | LEDBuffer[row];
-    Serial.print("address: ");
-    Serial.println(row+1);
-    Serial.print("data: ");
-    Serial.println(LEDBuffer[row]);
+//    Serial.print("address: ");
+//    Serial.println(row+1);
+//    Serial.print("data: ");
+//    Serial.println(LEDBuffer[row]);
     SPI.transfer16(data);
-    Serial.print("padding: ");
-    Serial.println(panelDiff);
+//    Serial.print("padding: ");
+//    Serial.println(panelDiff);
     for (byte i = 0; i < panelDiff; i++) // for other panels, simply fill with zeros
     {
-      Serial.print("Adding padd, ");
+//      Serial.print("Adding padd, ");
       SPI.transfer16(0x00);
     }
     Serial.println("");
@@ -98,12 +98,12 @@ void LEDPanel::writeBuffer(byte *LEDBuffer)  // should be a pointer referencing 
 
   for(int panel = 0; panel < _panels; panel++)
   {
-    Serial.println("sending:");
-    for(int row = 0; row < 8; row++)
-    {
-      Serial.println( *(LEDBuffer+(panel*8)+row));
-    }
-    Serial.println("");
+//    Serial.println("sending:");
+//    for(int row = 0; row < 8; row++)
+//    {
+//      Serial.println( *(LEDBuffer+(panel*8)+row));
+//    }
+    //Serial.println("");
       writeBufferToPanel((LEDBuffer+(panel*8)),panel);
   }
 
@@ -126,8 +126,8 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
   for(int i = 0; i < input.length(); i++)
   {
     char currentChar = input.charAt(i);
-    Serial.print("Current Char: ");
-    Serial.println(currentChar);
+    //Serial.print("Current Char: ");
+    //Serial.println(currentChar);
 //    byte charVal = (byte)(currentChar - '0');
     byte charVal = (byte)currentChar;
     byte *renderedChar;
@@ -136,9 +136,9 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
     for(int a = 0; a < 5; a++)
     {
       panelBuffer[byteIndex+a] = renderedChar[a];
-      Serial.println(renderedChar[a]);
+      //Serial.println(renderedChar[a]);
     }
-    Serial.println(" ");
+    //Serial.println(" ");
   }
 
   
@@ -166,7 +166,7 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
       {
         frameBuffer[panel*8+row] |= panelBuffer[panel*8 + bitPos] >> bitPos;
       }
-      Serial.println(frameBuffer[panel*8+row]);
+      //Serial.println(frameBuffer[panel*8+row]);
     }
   }
   writeBuffer(frameBuffer);

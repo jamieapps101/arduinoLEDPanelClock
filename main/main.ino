@@ -58,6 +58,17 @@ byte bBuffer[] = {
   0x80
   };
 
+ byte pBuffer[] = {
+  1,
+  3,
+  7,
+  31,
+  24,
+  0,
+  0,
+  0
+  };
+
 
 byte cBuffer[] = {
   0x01,
@@ -104,9 +115,15 @@ void setup()
   //panel.writeBufferToPanel(A,1);
   //panel.writeString("ABCD",false);
   //panel.writeBuffer(cBuffer);
-  panel.writeBufferToPanel(bBuffer,1);
-  rotate2(bBuffer);
-  panel.writeBufferToPanel(bBuffer,0);
+  panel.writeBufferToPanel(pBuffer,0);
+  rotate2(pBuffer);
+  panel.writeBufferToPanel(pBuffer,1);
+  rotate2(pBuffer);
+  panel.writeBufferToPanel(pBuffer,2);
+  rotate2(pBuffer);
+  panel.writeBufferToPanel(pBuffer,3);
+  rotate2(pBuffer);
+  
   
   
 }
@@ -128,22 +145,47 @@ byte * rotate(byte *panelBuffer)
 
 void rotate2(byte *inputBuffer)
 {
-  bool intInputBuffer[8][8];
-  bool intOutputBuffer[8][8];
+  bool temp[8][8];
+  Serial.println("Input");
   for(int x = 0; x < 8; x++)
   {
-    for(int y = 0; y< 8; y++)
+    Serial.print(inputBuffer[x]);
+    Serial.print(" --> ");
+    for(int y = 0; y < 8; y++)
     {
-      intInputBuffer[x][y] = inputBuffer[x] && (1<<y);
+       temp[x][y] = inputBuffer[x] & (1<<y);
+       Serial.print(inputBuffer[x],BIN);
+       Serial.print(",");
+       Serial.print((1<<y),BIN);
+       Serial.print("=");
+       Serial.print(temp[x][y]);
+       Serial.print("  ");
     }
+    Serial.println();
   }
+  bool temp2[8][8];
+  Serial.println("Output");
+  for(int x = 0; x < 8; x++)
+  {
+    for(int y = 0; y < 8; y++)
+    {
+       temp2[x][y] = temp[y][7-x];
+       Serial.print(temp2[x][y]);
+       Serial.print(" ");
+    }
+    Serial.println("");
+  }
+  Serial.println("Output Buffer");
   for(int x = 0; x < 8; x++)
   {
     inputBuffer[x] = 0;
     for(int y = 0; y < 8; y++)
     {
-      inputBuffer[x] |= intInputBuffer[y][x] << y;
+       inputBuffer[x] |= (temp2[x][y]) << y;
+       Serial.print(temp2[x][y]);
+       Serial.print("  ");
     }
+    Serial.println("");
   }
   
 }
