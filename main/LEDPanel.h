@@ -14,6 +14,7 @@ class LEDPanel
   void scrollRender(int index);
 
   void writeString(String input, bool scroll);
+  void writeString_old(String input, bool scroll);
   
   private:
   bool _scroll;

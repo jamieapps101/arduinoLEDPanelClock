@@ -119,7 +119,7 @@ void setup()
 //  panel.bufferRotate(pBuffer);
 //  panel.writeBufferToPanel(pBuffer,3);
 //  panel.bufferRotate(pBuffer); 
-  panel.writeString("ABCDEFG",true);
+  panel.writeString("HI LIV",true);
 }
 
 void loop() 

@@ -77,10 +77,8 @@ void LEDPanel::writeBufferToPanel(byte *LEDBuffer, byte panel) // should be a po
     {
       SPI.transfer16(0x00);
     }
-    Serial.println("");
     digitalWrite(_CSPin, HIGH);
   }
-  Serial.println("End\n");
 }
 
 void LEDPanel::writeBuffer(byte *LEDBuffer)  // should be a pointer referencing 8*_panels bytes
@@ -112,7 +110,7 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
 }
 
 
- void LEDPanel::writeString(String input, bool scroll)
+ void LEDPanel::writeString_old(String input, bool scroll)
  {
   // render the frame buffer
     // for each letter, create a buffer of any length
@@ -153,10 +151,10 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
 
 //  byte frameBuffer[_panels*8];
   // transpose the frame buffer, aka going from ||||||||||| to horizontally stacked
-  if(scroll == true)
-  {
-    for(
-  }
+//  if(scroll == true)
+//  {
+//    for(
+//  }
   
   for(int panel =0; panel<(bufferPanelRowsEquiv/8); panel++) // for now assume that we are not scrolling
   {
@@ -176,6 +174,95 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
     _scroll = false;
     _scrollWindowIndex = 0;
     _maxScrollWindowIndex = 0;
+    free(_frameBuffer);
+  }
+ }
+
+ 
+ void LEDPanel::writeString(String input, bool scroll)
+ {
+
+  // see if scroll required
+  if(scroll == true && (input.length()*6) <= _panels*8)
+  {
+    scroll = false;
+  }
+  // initialise variables
+  byte *panelBuffer;
+  byte *panelBufferModified;
+  byte maxScrollWindowIndex_temp;
+  byte panelBufferRows = 0;
+  // allocate space
+  if(scroll == false)
+  {
+    panelBufferRows =  _panels*8;
+    panelBuffer = (byte*)calloc(panelBufferRows,sizeof(byte));
+  }
+  else
+  {
+    // enough for all letters plus blank screen at end of scroll
+    panelBufferRows = _panels*8 + ceil((input.length()*6)/8)*8;
+    panelBuffer = (byte*)calloc(panelBufferRows,sizeof(byte)); 
+    panelBufferModified = (byte*)calloc(panelBufferRows,sizeof(byte));
+  }
+
+  // convert string to vertical stacked array
+  for(int i = 0; i < input.length(); i++)
+  {
+    char currentChar = input.charAt(i);
+    byte charVal = (byte)currentChar;
+    byte *renderedChar;
+    renderedChar = getVerticalLetter(charVal);
+    byte byteIndex = i*6; // ie the character we're on times 5 char wdith + 1 space
+    for(int a = 0; a < 5; a++)
+    {
+      panelBuffer[byteIndex+a] = renderedChar[a];
+    }
+    panelBuffer[byteIndex+5] = 0; 
+  }
+
+  // make copy to preserve original
+  if(scroll == true)
+  {
+    for(int row = 0; row < panelBufferRows; row++)
+    {
+      panelBufferModified[row] = panelBuffer[row];
+    }
+    for(int panel =0; panel<(panelBufferRows/8); panel++)
+    {
+      bufferRotate(panelBufferModified+(panel*8));
+    }
+    writeBuffer(panelBufferModified);
+    free(panelBufferModified);
+  }
+  else
+  {
+    for(int panel =0; panel<(panelBufferRows/8); panel++)
+    {
+      bufferRotate(panelBuffer+(panel*8));
+    }
+    writeBuffer(panelBuffer);
+  }
+    // deal with scroll settings if enabled:
+  if(scroll == true)
+  {
+    _scroll = true;
+    _scrollWindowIndex = 0;
+    _frameBuffer = panelBuffer;
+    _maxScrollWindowIndex = panelBufferRows-_panels*8;
+    Serial.print("panelBufferRows: ");
+    Serial.println(panelBufferRows);
+    Serial.print("_panels*8: ");
+    Serial.println(_panels*8);
+    Serial.print("_maxScrollWindowIndex: ");
+    Serial.println(_maxScrollWindowIndex);
+  }
+  else
+  {
+    _scroll = false;
+    _scrollWindowIndex = 0;
+    _maxScrollWindowIndex = 0;
+    free(panelBuffer);
     free(_frameBuffer);
   }
  }
@@ -220,9 +307,20 @@ void LEDPanel::scrollRender(int index)
     {
        _scrollWindowIndex = index;
     }
-    writeBuffer(_frameBuffer+_scrollWindowIndex);
+    byte *temp;
+    temp = (byte*)calloc(_panels*8,sizeof(byte)); 
+    for(int row = 0; row < _panels*8; row++)
+    {
+      temp[row] = _frameBuffer[row+_scrollWindowIndex];
+    }
+    for(int panel = 0; panel < _panels; panel++)
+    {
+      bufferRotate(temp+(panel*8));
+    }
+    writeBuffer(temp);
+    free(temp);
     _scrollWindowIndex++;
-    if(_scrollWindowIndex == _maxScrollWindowIndex)
+    if(_scrollWindowIndex >= _maxScrollWindowIndex)
     {
       _scrollWindowIndex = 0;
     }
