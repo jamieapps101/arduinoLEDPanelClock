@@ -1,4 +1,4 @@
-byte A[] = {
+byte def_A[] = {
   B01111110,
   B10100000,
   B10100000,
@@ -9,7 +9,7 @@ byte A[] = {
   B00000000
 };
 
-byte B[] = {
+byte def_B[] = {
   B11111110,
   B10010010,
   B10010010,
@@ -21,7 +21,7 @@ byte B[] = {
 };
 
 
-byte C[] = {
+byte def_C[] = {
   B01111100,
   B10000010,
   B10000010,
@@ -33,7 +33,7 @@ byte C[] = {
 };
 
 
-byte D[] = {
+byte def_D[] = {
   B11111110,
   B10000010,
   B10000010,
@@ -44,7 +44,7 @@ byte D[] = {
   B00000000
 };
 
-byte E[] = {
+byte def_E[] = {
   B11111110,
   B10010010,
   B10010010,
@@ -55,7 +55,7 @@ byte E[] = {
   B00000000
 };
 
-byte F[] = {
+byte def_F[] = {
   B11111110,
   B10010000,
   B10010000,
@@ -66,7 +66,7 @@ byte F[] = {
   B00000000
 };
 
-byte G[] = {
+byte def_G[] = {
   B01111100,
   B10000010,
   B10000010,
@@ -77,7 +77,7 @@ byte G[] = {
   B00000000
 };
 
-byte H[] = {
+byte def_H[] = {
   B11111110,
   B00010000,
   B00010000,
@@ -88,7 +88,7 @@ byte H[] = {
   B00000000
 };
 
-byte I[] = {
+byte def_I[] = {
   B00000000,
   B10000010,
   B11111110,
@@ -99,7 +99,7 @@ byte I[] = {
   B00000000
 };
 
-byte L[] = {
+byte def_L[] = {
   B11111110,
   B00000010,
   B00000010,
@@ -110,7 +110,7 @@ byte L[] = {
   B00000000
 };
 
-byte V[] = {
+byte def_V[] = {
   B11111000,
   B00000100,
   B00000010,
@@ -122,7 +122,7 @@ byte V[] = {
 };
 
 
-byte P[] = {
+byte def_P[] = {
   B11111110,
   B10001000,
   B10001000,
@@ -133,7 +133,7 @@ byte P[] = {
   B00000000
 };
 
-byte M[] = {
+byte def_M[] = {
   B11111110,
   B01000000,
   B00100000,
@@ -144,18 +144,18 @@ byte M[] = {
   B00000000
 };
 
-byte one[] = {
+byte def_one[] = {
   B00000000,
-  B00000000,
-  B11111110,
   B01000000,
+  B11111110,
+  B00000000,
   B00000000,
   B00000000,
   B00000000,
   B00000000
 };
 
-byte two[] = {
+byte def_two[] = {
   B01000010,
   B10000010,
   B10000110,
@@ -166,7 +166,7 @@ byte two[] = {
   B00000000
 };
 
-byte three[] = {
+byte def_three[] = {
   B10000010,
   B10010010,
   B10010010,
@@ -177,7 +177,7 @@ byte three[] = {
   B00000000
 };
 
-byte four[] = {
+byte def_four[] = {
   B11110000,
   B00010000,
   B00010000,
@@ -189,29 +189,29 @@ byte four[] = {
 };
 
 
-byte five[] = {
-  B10001100,
+byte def_five[] = {
+  B11110000,
   B10010010,
   B10010010,
   B10010010,
-  B11110010,
+  B10001110,
   B00000000,
   B00000000,
   B00000000
 };
 
-byte six[] = {
-  B10011110,
-  B10010010,
-  B10010010,
-  B10010010,
+byte def_six[] = {
   B11111110,
+  B10010010,
+  B10010010,
+  B10010010,
+  B10011110,
   B00000000,
   B00000000,
   B00000000
 };
 
-byte seven[] = {
+byte def_seven[] = {
   B10000000,
   B10000000,
   B10001110,
@@ -222,17 +222,17 @@ byte seven[] = {
   B00000000
 };
 
-byte eight[] = {
-  B01101100,
+byte def_eight[] = {
+  B11111110,
   B10010010,
   B10010010,
   B10010010,
-  B01101100,
+  B11111110,
   B00000000,
   B00000000,
   B00000000
 };
-byte nine[] = {
+byte def_nine[] = {
   B11110010,
   B10010010,
   B10010010,
@@ -243,18 +243,18 @@ byte nine[] = {
   B00000000
 };
 
-byte zero[] = {
-  B01111100,
+byte def_zero[] = {
+  B11111110,
   B10000010,
   B10000010,
   B10000010,
-  B01111100,
+  B11111110,
   B00000000,
   B00000000,
   B00000000
 };
 
-byte blank[] = {
+byte def_blank[] = {
   B00000000,
   B00000000,
   B00000000,
@@ -265,7 +265,7 @@ byte blank[] = {
   B00000000
 };
 
-byte colon[] = {
+byte def_colon[] = {
   B00000000,
   B00000000,
   B01000100,
@@ -276,87 +276,87 @@ byte colon[] = {
   B00000000
 };
 
-void *getVerticalLetter(char character)
+byte *getVerticalLetter(char character)
 {
   switch(character)
   {
     case 'A':
-      return A;
+      return def_A;
     break;
     case 'B':
-      return B;
+      return def_B;
     break;
     case 'C':
-      return C;
+      return def_C;
     break;
     case 'D':
-      return D;
+      return def_D;
     break;
     case 'E':
-      return E;
+      return def_E;
     break;
     case 'F':
-      return F;
+      return def_F;
     break;
     case 'G':
-      return G;
+      return def_G;
     break;
     case 'H':
-      return H;
+      return def_H;
     break;
     case 'I':
-      return I;
+      return def_I;
     break;
     case 'L':
-      return L;
+      return def_L;
     break;
     case 'M':
-      return M;
+      return def_M;
     break;
     case 'P':
-      return P;
+      return def_P;
     break;
     case 'V':
-      return V;
+      return def_V;
     break;
     case ':':
-      return colon;
+      return def_colon;
     break;
     case ' ':
-      return blank;
+      return def_blank;
     break;
     case '0':
-      return zero;
+      return def_zero;
     break;
     case '1':
-      return one;
+      return def_one;
     break;
     case '2':
-      return two;
+      return def_two;
     break;
     case '3':
-      return three;
+      return def_three;
     break;
     case '4':
-      return four;
+      return def_four;
     break;
     case '5':
-      return five;
+      return def_five;
     break;
     case '6':
-      return six;
+      return def_six;
     break;
     case '7':
-      return seven;
+      return def_seven;
     break;
     case '8':
-      return eight;
+      return def_eight;
     break;
     case '9':
-      return nine;
+      return def_nine;
     break;
     default:
-      return blank;
+      return def_blank;
     break;
   }
 }

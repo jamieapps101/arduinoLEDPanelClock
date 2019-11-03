@@ -1,5 +1,4 @@
 #include "LEDPanel.h"
-#include "digits2.h"
 
 LEDPanel::LEDPanel(byte dataPin, byte clockPin, byte CSPin, byte panels)
 {
@@ -14,7 +13,7 @@ LEDPanel::LEDPanel(byte dataPin, byte clockPin, byte CSPin, byte panels)
   // start the SPI library:
   SPI.begin();
   SPI.setBitOrder(MSBFIRST);
-  SPI.setDataMode(SPI_MODE0); // commented to use defaults (0,2,3 all work equally well)
+  //  SPI.setDataMode(SPI_MODE0); // commented to use defaults (0,2,3 all work equally well)
   pinMode(_CSPin, OUTPUT);
   // clear all registers
   for (byte reg = 0; reg <= 0x0F; reg++)
@@ -29,7 +28,6 @@ LEDPanel::LEDPanel(byte dataPin, byte clockPin, byte CSPin, byte panels)
   writeToAll(0x09, 0x00); // set decode mode to no decode
   writeToAll(0x0B, 0x07); // set scan limit to all on
   writeToAll(0x0F, 0x00); // turn displaytest off
-  //disable();
 }
 
 void LEDPanel::writeToAll(byte reg, byte data)
@@ -105,7 +103,7 @@ void LEDPanel::writeBufferToAll(byte *LEDBuffer)  // should be a pointer referen
 {
   for(int panel = 0; panel<_panels; panel++)
   {
-    writeBufferToPanel(*LEDBuffer,panel);
+    writeBufferToPanel(LEDBuffer,panel);
   }
 }
 
@@ -325,4 +323,14 @@ void LEDPanel::scrollRender(int index)
       _scrollWindowIndex = 0;
     }
   }
+}
+
+byte LEDPanel::getScrollWindowSize()
+{
+  return _maxScrollWindowIndex;
+}
+
+byte LEDPanel::getScrollWindowIndex()
+{
+  return _scrollWindowIndex;
 }

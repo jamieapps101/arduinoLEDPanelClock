@@ -1,4 +1,5 @@
 #include <SPI.h>
+#include "digitsDefs.h"
 
 class LEDPanel
 {
@@ -12,9 +13,10 @@ class LEDPanel
   void writeBufferToAll(byte *LEDBuffer);
   void bufferRotate(byte *inputBuffer);
   void scrollRender(int index);
-
   void writeString(String input, bool scroll);
   void writeString_old(String input, bool scroll);
+  byte getScrollWindowSize();
+  byte getScrollWindowIndex();
   
   private:
   bool _scroll;
