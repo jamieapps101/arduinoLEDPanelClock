@@ -1,3 +1,5 @@
+#ifndef LEDPANELDEF
+#define LEDPANELDEF
 #include <SPI.h>
 #include "digitsDefs.h"
 
@@ -30,3 +32,35 @@ class LEDPanel
   byte *_totalFrameBuffer;
   byte *_frameBuffer;
 };
+
+// digit stuff
+extern byte redef_A[8];
+extern byte redef_B[8];
+extern byte redef_C[8];
+extern byte redef_D[8];
+extern byte redef_E[8];
+extern byte redef_F[8];
+extern byte redef_G[8];
+extern byte redef_H[8];
+extern byte redef_I[8];
+extern byte redef_L[8];
+extern byte redef_V[8];
+extern byte redef_P[8];
+extern byte redef_M[8];
+
+extern byte redef_one[8];
+extern byte redef_two[8];
+extern byte redef_three[8];
+extern byte redef_four[8];
+extern byte redef_five[8];
+extern byte redef_six[8];
+extern byte redef_seven[8];
+extern byte redef_eight[8];
+extern byte redef_nine[8];
+extern byte redef_zero[8];
+extern byte redef_blank[8];
+extern byte redef_colon[8];
+
+extern byte *getVerticalLetter(char character);
+
+#endif

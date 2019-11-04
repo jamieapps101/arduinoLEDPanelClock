@@ -88,7 +88,7 @@ void loop()
     rejectCount=0;
 //    int seconds = getSeconds(unixTime);
     char tempBuffer[2];
-    sprintf(tempBuffer, %02d,getMinutes(unixTime));
+    sprintf(tempBuffer, "%02d",getMinutes(unixTime));
     String minutes = String(tempBuffer);
     String hours = String(getHours(unixTime));
     String output = "";

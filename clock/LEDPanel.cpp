@@ -334,3 +334,369 @@ byte LEDPanel::getScrollWindowIndex()
 {
   return _scrollWindowIndex;
 }
+
+
+
+
+byte redef_A[] = {
+  B01111110,
+  B10100000,
+  B10100000,
+  B10100000,
+  B01111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_B[] = {
+  B11111110,
+  B10010010,
+  B10010010,
+  B10010010,
+  B01101100,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+
+byte redef_C[] = {
+  B01111100,
+  B10000010,
+  B10000010,
+  B10000010,
+  B01000100,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+
+byte redef_D[] = {
+  B11111110,
+  B10000010,
+  B10000010,
+  B10000010,
+  B01111100,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_E[] = {
+  B11111110,
+  B10010010,
+  B10010010,
+  B10010010,
+  B10000010,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_F[] = {
+  B11111110,
+  B10010000,
+  B10010000,
+  B10010000,
+  B10000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_G[] = {
+  B01111100,
+  B10000010,
+  B10000010,
+  B10010010,
+  B01011100,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_H[] = {
+  B11111110,
+  B00010000,
+  B00010000,
+  B00010000,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_I[] = {
+  B00000000,
+  B10000010,
+  B11111110,
+  B10000010,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_L[] = {
+  B11111110,
+  B00000010,
+  B00000010,
+  B00000010,
+  B00000010,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_V[] = {
+  B11111000,
+  B00000100,
+  B00000010,
+  B00000100,
+  B11111000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+
+byte redef_P[] = {
+  B11111110,
+  B10001000,
+  B10001000,
+  B10001000,
+  B01110000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_M[] = {
+  B11111110,
+  B01000000,
+  B00100000,
+  B01000000,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_one[] = {
+  B00000000,
+  B01000000,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_two[] = {
+  B01000010,
+  B10000010,
+  B10000110,
+  B10001010,
+  B01110010,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_three[] = {
+  B10000010,
+  B10010010,
+  B10010010,
+  B10010010,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_four[] = {
+  B11110000,
+  B00010000,
+  B00010000,
+  B00010000,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+
+byte redef_five[] = {
+  B11110000,
+  B10010010,
+  B10010010,
+  B10010010,
+  B10001110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_six[] = {
+  B11111110,
+  B10010010,
+  B10010010,
+  B10010010,
+  B10011110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_seven[] = {
+  B10000000,
+  B10000000,
+  B10001110,
+  B10010000,
+  B11100000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_eight[] = {
+  B11111110,
+  B10010010,
+  B10010010,
+  B10010010,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+byte redef_nine[] = {
+  B11110010,
+  B10010010,
+  B10010010,
+  B10010010,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_zero[] = {
+  B11111110,
+  B10000010,
+  B10000010,
+  B10000010,
+  B11111110,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_blank[] = {
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte redef_colon[] = {
+  B00000000,
+  B00000000,
+  B01000100,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000,
+  B00000000
+};
+
+byte *getVerticalLetter(char character)
+{
+  switch(character)
+  {
+    case 'A':
+      return redef_A;
+    break;
+    case 'B':
+      return redef_B;
+    break;
+    case 'C':
+      return redef_C;
+    break;
+    case 'D':
+      return redef_D;
+    break;
+    case 'E':
+      return redef_E;
+    break;
+    case 'F':
+      return redef_F;
+    break;
+    case 'G':
+      return redef_G;
+    break;
+    case 'H':
+      return redef_H;
+    break;
+    case 'I':
+      return redef_I;
+    break;
+    case 'L':
+      return redef_L;
+    break;
+    case 'M':
+      return redef_M;
+    break;
+    case 'P':
+      return redef_P;
+    break;
+    case 'V':
+      return redef_V;
+    break;
+    case ':':
+      return redef_colon;
+    break;
+    case ' ':
+      return redef_blank;
+    break;
+    case '0':
+      return redef_zero;
+    break;
+    case '1':
+      return redef_one;
+    break;
+    case '2':
+      return redef_two;
+    break;
+    case '3':
+      return redef_three;
+    break;
+    case '4':
+      return redef_four;
+    break;
+    case '5':
+      return redef_five;
+    break;
+    case '6':
+      return redef_six;
+    break;
+    case '7':
+      return redef_seven;
+    break;
+    case '8':
+      return redef_eight;
+    break;
+    case '9':
+      return redef_nine;
+    break;
+    default:
+      return redef_blank;
+    break;
+  }
+}
