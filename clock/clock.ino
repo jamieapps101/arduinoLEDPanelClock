@@ -1,6 +1,7 @@
 // LED matrix driver for max7219
 
 // NTP shamelessly ripped from https://tttapa.github.io/ESP8266/Chap15%20-%20NTP.html
+#include <SPI.h>
 #include "LEDPanel.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
@@ -103,7 +104,7 @@ void loop()
   {
     Serial.println("Got nothing");
     rejectCount++;
-    if(rejectCount > 60) // if cannot talk to server for 1 min, esp reboots
+    if(rejectCount > 3600) // if cannot talk to server for 1 hour, esp reboots
     {
       ESP.reset();
     }
@@ -111,6 +112,17 @@ void loop()
     sendNTPpacket(timeServerIP);  
     delay(1000);
   }
+
+  // try to get time
+//  uint32_t unixTime = getTime();
+//  if( unixTime != 0) {
+//    rejectCount = 0;
+//  } else {
+//    rejectCount++;
+//  }
+  
+
+  
 }
 
 

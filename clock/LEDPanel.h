@@ -1,7 +1,7 @@
 #ifndef LEDPANELDEF
 #define LEDPANELDEF
 #include <SPI.h>
-#include "digitsDefs.h"
+//#include "digitsDefs.h"
 
 class LEDPanel
 {
