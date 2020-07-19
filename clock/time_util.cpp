@@ -1,5 +1,4 @@
 #include "time_util.h"
-#include "Arduino.h"
 // #include <ESP8266WiFi.h>
 
 
@@ -15,10 +14,6 @@ struct time get_time_struct(uint32_t time) {
         }
         year_seconds = year_to_seconds(year);
     }
-    Serial.print("year: ");
-    Serial.println(year);
-    Serial.print("time: ");
-    Serial.println(time);
     // 0 - Monday
     // starts on thursday
     int day_of_week = 3;
@@ -28,8 +23,6 @@ struct time get_time_struct(uint32_t time) {
         temp -= WEEK_IN_SECONDS;
         week++;
     }
-    Serial.print("week: ");
-    Serial.println(week);
     while(temp>DAY_IN_SECONDS) {
         day_of_week++;
         temp-=DAY_IN_SECONDS;

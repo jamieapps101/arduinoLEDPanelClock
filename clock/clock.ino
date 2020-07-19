@@ -83,60 +83,15 @@ void setup()
 
 void loop() 
 {
-
-//   uint32_t unixTime = getTime();
-//   if( unixTime != 0)
-//   {
-//     Serial.println("Got response!");
-//     rejectCount=0;
-// //    int seconds = getSeconds(unixTime);
-//     char tempBuffer[2];
-//     sprintf(tempBuffer, "%02d",getMinutes(unixTime));
-//     String minutes = String(tempBuffer);
-//     String hours = String(getHours(unixTime));
-//     String output = "";
-//     output.concat(hours);
-//     output.concat(":");
-//     output.concat(minutes);
-//     panel.writeString(output,true);
-//     delay(1000*30); // delay 30 seconds
-//     sendNTPpacket(timeServerIP);  
-//   }
-//   else
-//   {
-//     Serial.println("Got nothing");
-//     rejectCount++;
-//     if(rejectCount > 3600) // if cannot talk to server for 1 hour, esp reboots
-//     {
-//       ESP.reset();
-//     }
-//     // send another request after 1 second
-//     sendNTPpacket(timeServerIP);  
-//     delay(1000);
-//   }
-
     uint32_t unixTime = getTime();
     while (unixTime == 0) {
         delay(1000*3);
         Serial.println("\r\nSending NTP request ...");
         unixTime = getTime();
     }
-    // utin32_t seconds = getSeconds(unixTime);
-    // utin32_t mins    = getMinutes(unixTime);
-    // utin32_t hours   = getHours(unixTime);
     struct time Time = get_time_struct(unixTime);
     uint32_t increment = 0;
     int inc_hours   = Time.hours;
-    Serial.print("week:");
-    Serial.println(Time.week);
-    Serial.print("day of week:");
-    Serial.println(Time.day_of_week);
-    Serial.print("hour:");
-    Serial.println(Time.hours);
-    Serial.print("minutes:");
-    Serial.println(Time.minutes);
-    Serial.print("seconds:");
-    Serial.println(Time.seconds);
     if (Time.daylight_saving) {
         inc_hours++;
     }
@@ -158,27 +113,10 @@ void loop()
             inc_hours++;
             inc_mins-=60;
         }
-        // inc_seconds = increment % (60);
-
-            Serial.print("hour:");
-            Serial.println(inc_hours);
-            Serial.print("minutes:");
-            Serial.println(inc_mins);
-            Serial.print("seconds:");
-            Serial.println(inc_seconds);
-            Serial.println("\n\n");
-            
-
         // update display
-        Serial.print("minutes min_tempBuffer:");
-        Serial.println(min_tempBuffer); // <<<< this has correct value
         sprintf(min_tempBuffer, "%02d",inc_mins);
-        minutes = String(min_tempBuffer); // << this is an issue
-        Serial.print("minutes string:");
-        Serial.println(minutes); // << this does not
-        
+        minutes = String(min_tempBuffer); 
         sprintf(hour_tempBuffer, "%02d",inc_hours);
-
         hours   = String(hour_tempBuffer);
         output = String("");
         output.concat(hours);
