@@ -2,4 +2,5 @@ old
 arduino-cli
 LICENSE.txt
 clock/build
+clock/wifi_info.h
 arduino-cli.yaml

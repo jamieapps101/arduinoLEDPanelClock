@@ -1,8 +1,9 @@
 // LED matrix driver for max7219
-
+// Jamie apps
 // NTP shamelessly ripped from https://tttapa.github.io/ESP8266/Chap15%20-%20NTP.html
 #include <SPI.h>
 #include "LEDPanel.h"
+#include "Wifi_info.h"
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 #include <WiFiUdp.h>
@@ -53,8 +54,8 @@ void setup()
   panel.writeString("ABC",true);
   renderTicker.attach(0.1, renderPanel);
   Serial.println("Connecting...");
-  wifiMulti.addAP("ASK4 Wireless", "");   // add Wi-Fi networks
-  Serial.println("Connected!");
+//   wifiMulti.addAP("ASK4 Wireless", "");   // add Wi-Fi networks
+  wifiMulti.addAP(SSID, PASSWORD);   // add Wi-Fi networks
   while (wifiMulti.run() != WL_CONNECTED) {  // Wait for the Wi-Fi to connect
     delay(250);
     Serial.print('.');
