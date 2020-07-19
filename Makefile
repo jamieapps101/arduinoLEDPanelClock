@@ -82,3 +82,5 @@ upload: compile
 
 serial:
 	minicom -b 115200 -D /dev/ttyUSB0
+
+upload_serial: upload serial

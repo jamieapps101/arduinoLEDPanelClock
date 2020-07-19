@@ -52,7 +52,7 @@ void setup()
   panel.setLEDIntensity(0);
   Serial.begin(115200);
   panel.enable();
-  panel.writeString("ABC",true);
+  panel.writeString("ABCD",true);
   renderTicker.attach(0.1, renderPanel);
   Serial.println("Connecting...");
 //   wifiMulti.addAP("ASK4 Wireless", "");   // add Wi-Fi networks
@@ -118,7 +118,8 @@ void loop()
 
     uint32_t unixTime = getTime();
     while (unixTime == 0) {
-        delay(1000*10);
+        delay(1000*3);
+        Serial.println("\r\nSending NTP request ...");
         unixTime = getTime();
     }
     // utin32_t seconds = getSeconds(unixTime);
@@ -127,12 +128,23 @@ void loop()
     struct time Time = get_time_struct(unixTime);
     uint32_t increment = 0;
     int inc_hours   = Time.hours;
+    Serial.print("week:");
+    Serial.println(Time.week);
+    Serial.print("day of week:");
+    Serial.println(Time.day_of_week);
+    Serial.print("hour:");
+    Serial.println(Time.hours);
+    Serial.print("minutes:");
+    Serial.println(Time.minutes);
+    Serial.print("seconds:");
+    Serial.println(Time.seconds);
     if (Time.daylight_saving) {
         inc_hours++;
     }
     int inc_mins    = Time.minutes;
     int inc_seconds = Time.seconds;
     while(true) {
+        increment++;
         inc_seconds++;
         if (inc_seconds == 60) {
             inc_mins++;
@@ -143,13 +155,23 @@ void loop()
             inc_mins-=60;
         }
         // inc_seconds = increment % (60);
+
+            Serial.print("hour:");
+            Serial.println(inc_hours);
+            Serial.print("minutes:");
+            Serial.println(inc_mins);
+            Serial.print("seconds:");
+            Serial.println(inc_seconds);
+            Serial.println("\n\n");
+            
+
         // update display
         char min_tempBuffer[2];
         char hour_tempBuffer[2];
         sprintf(min_tempBuffer, "%02d",inc_mins);
         sprintf(hour_tempBuffer, "%02d",inc_hours);
         String minutes = String(min_tempBuffer);
-        String hours = String(hour_tempBuffer);
+        String hours   = String(hour_tempBuffer);
         String output = "";
         output.concat(hours);
         if ((inc_seconds % 2) == 0) {
