@@ -52,10 +52,9 @@ void setup()
   panel.setLEDIntensity(0);
   Serial.begin(115200);
   panel.enable();
-  panel.writeString("ABCD",true);
+  panel.writeString("ABCDE",true);
   renderTicker.attach(0.1, renderPanel);
   Serial.println("Connecting...");
-//   wifiMulti.addAP("ASK4 Wireless", "");   // add Wi-Fi networks
   wifiMulti.addAP(SSID_DEF, PASSWORD_DEF);   // add Wi-Fi networks
   while (wifiMulti.run() != WL_CONNECTED) {  // Wait for the Wi-Fi to connect
     delay(250);
@@ -143,6 +142,11 @@ void loop()
     }
     int inc_mins    = Time.minutes;
     int inc_seconds = Time.seconds;
+    char min_tempBuffer[2];
+    char hour_tempBuffer[2];
+    String minutes;
+    String hours;
+    String output;
     while(true) {
         increment++;
         inc_seconds++;
@@ -166,13 +170,17 @@ void loop()
             
 
         // update display
-        char min_tempBuffer[2];
-        char hour_tempBuffer[2];
+        Serial.print("minutes min_tempBuffer:");
+        Serial.println(min_tempBuffer); // <<<< this has correct value
         sprintf(min_tempBuffer, "%02d",inc_mins);
+        minutes = String(min_tempBuffer); // << this is an issue
+        Serial.print("minutes string:");
+        Serial.println(minutes); // << this does not
+        
         sprintf(hour_tempBuffer, "%02d",inc_hours);
-        String minutes = String(min_tempBuffer);
-        String hours   = String(hour_tempBuffer);
-        String output = "";
+
+        hours   = String(hour_tempBuffer);
+        output = String("");
         output.concat(hours);
         if ((inc_seconds % 2) == 0) {
             output.concat(":");
