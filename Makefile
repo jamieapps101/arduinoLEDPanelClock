@@ -68,11 +68,17 @@ arduino-cli.yaml: arduino-cli
 
 setup: arduino-cli.yaml
 
-compile: setup
+clean:
+	-rm -rf clock/build
+
+compile: setup clean
 	./arduino-cli compile --fqbn $(BOARD_FQBN) clock
 
-upload: 
+upload: compile
 	./arduino-cli upload \
 		-p $(PORT) \
 		--fqbn $(BOARD_FQBN) \
 		clock
+
+serial:
+	minicom -b 115200 -D /dev/ttyUSB0
